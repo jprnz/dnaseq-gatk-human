@@ -1,0 +1,32 @@
+# Define reference to use
+reference_args:
+  # Ensembl species name
+  species: saccharomyces_cerevisiae
+
+  # Ensembl release 
+  release: 106
+
+  # Genome build
+  build: R64-1-1
+
+
+# Regions file (use null for whole-genome otherwise expects a bed file)
+regions: null
+
+# Where to store reference files 
+reference_path: "processed/reference"
+
+# Set stradedness, options:
+#   none: unstranded
+#   yes: first read strand aligned 
+#   reverse: second read strand aligned (common for Illumina TruSeq)
+#   path: path to file containing strand value (any of the above) for each sample.
+
+strandedness: reverse
+
+# Path to tsv describing fastq files (ie, sample, pair, path)
+fastqs: config/fastqs.tsv
+
+# Output path
+datadir: "processed"
+

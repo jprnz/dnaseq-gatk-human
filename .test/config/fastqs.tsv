@@ -1,0 +1,5 @@
+sample	pair	path
+S1	R1	data/S1_R1.fastq.gz
+S1	R2	data/S1_R2.fastq.gz
+S2	R1	data/S2_R1.fastq.gz
+S2	R2	data/S2_R2.fastq.gz
