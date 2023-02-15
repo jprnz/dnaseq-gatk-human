@@ -27,7 +27,7 @@ rule bqsr_recal:
         "   --ip 500"
         "   --known-sites {input.dbsnp}"
         "   --known-sites {input.indels}"
-        "   --TMP_DIR {resources.tmpdir}"
+        "   --tmp-dir {resources.tmpdir}"
         "   --output {output}"
         ") &> {log}"
 
@@ -49,14 +49,15 @@ rule bqsr_apply:
     resources:
         mem_mb = 16000
     shell:
+        "(set -x; "
         " gatk --java-options \"-Xms8G -Xmx16G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
-        "  ApplyBQSR"
+        " ApplyBQSR"
         "   --input {input.bam}"
         "   --bqsr-recal-file {input.recal}"
         "   --reference {input.ref_fasta}"
         "   {params.regions}"
         "   --ip 500"
-        "   --TMP_DIR {resources.tmpdir}"
+        "   --tmp-dir {resources.tmpdir}"
         "   --output {output.bam}"
         ") &> {log}"
 
