@@ -2,29 +2,32 @@ rule bqsr_recal:
     input:
         bam = markdupdir + "/{sample}.bam",
         bai = markdupdir + "/{sample}.bai",
-        genome_fasta = genome_fasta,
-        genome_faidx = genome_faidx,
-        genome_dict = genome_dict,
-        known = known_snps,
-        known_idx = known_snps_idx
+        ref_fasta = ref_fasta,
+        ref_faidx = ref_fai,
+        ref_dict = ref_dict,
+        indels = known_indels,
+        dbsnp = dbsnp_vcf
     output:
         bqsrdir + "/recal-files/{sample}.recal"
     log:
         bqsrdir + "/logs/recal-{sample}.log"
     params:
-        regions = "-L f{regions_file}" if regions else "",
-        known = [f"--known-sites {v}" for v in known_snps]
+        regions = f"-L {regions}" if regions else "",
     conda:
         "../envs/gatk.yaml"
     resources:
-        mem_mb = 8000
+        mem_mb = 10000
     shell:
         "(set -x; "
-        "  gatk BaseRecalibrator"
+        " gatk --java-options \"-Xms8G -Xmx10G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
+        " BaseRecalibrator"
         "   --input {input.bam}"
-        "   --reference {input.genome_fasta}"
+        "   --reference {input.ref_fasta}"
         "   {params.regions}"
-        "   {params.known}"
+        "   --ip 500"
+        "   --known-sites {input.dbsnp}"
+        "   --known-sites {input.indels}"
+        "   --TMP_DIR {resources.tmpdir}"
         "   --output {output}"
         ") &> {log}"
 
@@ -33,26 +36,28 @@ rule bqsr_apply:
         bam = markdupdir + "/{sample}.bam",
         bai = markdupdir + "/{sample}.bai",
         recal = bqsrdir + "/recal-files/{sample}.recal",
-        genome_fasta = genome_fasta
+        ref_fasta = ref_fasta
     output:
         bam = bqsrdir + "/{sample}.bam",
         bai = bqsrdir + "/{sample}.bai"
     log:
         bqsrdir + "/logs/apply-{sample}.log"
     params:
-        regions = "-L f{regions_file}" if regions else ""
+        regions = f"-L {regions}" if regions else "",
     conda:
         "../envs/gatk.yaml"
     resources:
-        mem_mb = 8000
+        mem_mb = 16000
     shell:
-        "(set -x; "
-        "  gatk ApplyBQSR"
+        " gatk --java-options \"-Xms8G -Xmx16G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
+        "  ApplyBQSR"
         "   --input {input.bam}"
-        "   --bqsr-recal-file {input.recal} "
-        "   --reference {input.genome_fasta} "
-        "   {params.regions} "
-        "   --output {output.bam} "
+        "   --bqsr-recal-file {input.recal}"
+        "   --reference {input.ref_fasta}"
+        "   {params.regions}"
+        "   --ip 500"
+        "   --TMP_DIR {resources.tmpdir}"
+        "   --output {output.bam}"
         ") &> {log}"
 
 rule run_bqsr:

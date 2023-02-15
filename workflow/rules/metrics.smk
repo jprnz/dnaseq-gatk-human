@@ -4,7 +4,8 @@ rule wgs_metrics:
     input:
         bam = bqsrdir + "/{sample}.bam",
         bai = bqsrdir + "/{sample}.bai",
-        genome_fasta = genome_fasta
+        intervals = regions,
+        ref_fasta = ref_fasta
     output:
         metricsdir + "/wgs_metrics/{sample}.metrics"
     log:
@@ -15,28 +16,33 @@ rule wgs_metrics:
         "(picard CollectWgsMetrics "
         "INPUT={input.bam} "
         "OUTPUT={output} "
-        "REFERENCE_SEQUENCE={input.genome_fasta} "
+        "REFERENCE_SEQUENCE={input.ref_fasta} "
+        "INTERVALS={input.intervals} "
         "MINIMUM_MAPPING_QUALITY=1 "
         "MINIMUM_BASE_QUALITY=1 "
-        "VALIDATION_STRINGENCY=LENIENT) &> {log}"
+        "USE_FAST_ALGORITHM=false "
+        "VALIDATION_STRINGENCY=SILENT) &> {log}"
 
-rule insert_metrics:
-    input:
-        bam = bqsrdir + "/{sample}.bam",
-        bai = bqsrdir + "/{sample}.bai"
-    output:
-        metrics = metricsdir + "/insert_size/{sample}.metrics",
-        histogram = metricsdir + "/insert_size/{sample}.pdf"
-    log:
-        metricsdir + "/logs/insert_size/{sample}.log"
-    conda:
-        "../envs/picard.yaml"
-    shell:
-        "(picard CollectInsertSizeMetrics "
-        "INPUT={input.bam} "
-        "OUTPUT={output.metrics} "
-        "HISTOGRAM_FILE={output.histogram} "
-        "VALIDATION_STRINGENCY=LENIENT) &> {log}"
+#rule variant_metrics:
+#    input:
+#        intervals = regions
+#        ref_fasta = ref_fasta
+#    output:
+#        metricsdir + "/wgs_metrics/{sample}.metrics"
+#    log:
+#        metricsdir + "/logs/wgs_metrics/{sample}.log"
+#    conda:
+#        "../envs/picard.yaml"
+#    shell:
+#        "(picard CollectVariantCallingMetrics "
+#        "INPUT={input.bam} "
+#        "OUTPUT={output} "
+#        "REFERENCE_SEQUENCE={input.ref_fasta} "
+#        "INTERVALS={input.intervals} "
+#        "MINIMUM_MAPPING_QUALITY=1 "
+#        "MINIMUM_BASE_QUALITY=1 "
+#        "USE_FAST_ALGORITHM=false "
+#        "VALIDATION_STRINGENCY=SILENT) &> {log}"
 
 rule idxstats:
     input:
@@ -71,7 +77,6 @@ rule samstats:
 rule run_metrics:
     input:
         expand(metricsdir + "/wgs_metrics/{sample}.metrics", sample=samples),
-        expand(metricsdir + "/insert_size/{sample}.metrics", sample=samples),
         expand(metricsdir + "/idxstats/{sample}_idxstats.tsv", sample=samples),
         expand(metricsdir + "/samstats/{sample}_samstats.txt", sample=samples)
 

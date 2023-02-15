@@ -11,16 +11,16 @@ rule markdups:
     conda:
         "../envs/picard.yaml"
     resources:
-        mem_mb = 8000
+        mem_mb = 16000
     shell:
-        "(set -x; picard MarkDuplicates -Xmx8G "
+        "(set -x; picard MarkDuplicates -Xms8G -Xmx10G -XX:ParallelGCThreads=5"
         "  INPUT={input.bam} "
         "  OUTPUT={output.bam} "
         "  METRICS_FILE={output.metrics} "
         "  OPTICAL_DUPLICATE_PIXEL_DISTANCE=2500 "
         "  REMOVE_DUPLICATES=true "
         "  CREATE_INDEX=true "
-        "  VALIDATION_STRINGENCY=LENIENT "
+        "  VALIDATION_STRINGENCY=SILENT "
         ") &> {log}"
 
 rule run_markdups:

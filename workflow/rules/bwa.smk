@@ -2,7 +2,7 @@ rule bwa:
     input:
         r1 = fastpdir + "/{sample}_R1.fastq.gz",
         r2 = fastpdir + "/{sample}_R2.fastq.gz",
-        index = bwa_index + ".sa"
+        index = ref_bwt
     output:
         bam = temp(bwadir + "/{sample}.bam"),
         bai = temp(bwadir + "/{sample}.bam.bai")
@@ -12,9 +12,9 @@ rule bwa:
         "../envs/bwa.yaml"
     params:
         extra = r"-R '@RG\tID:{sample}\tSM:{sample}\tPU:{sample}\tLB:Illumina\tPL:Illumina'",
-        index = bwa_index.split(".sa")[0],
+        index = bwa_index
     resources:
-        mem_mb = 8000
+        mem_mb = 16000
     threads: 10
     shell:
         "(set -x; "

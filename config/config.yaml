@@ -1,16 +1,31 @@
-# GATK bundle location
-gatk_bundel_path: /data/seqcore/reference/gatk-bundle/hg38
+# Capture regions:
+#   WGS: resources/wgs_calling_regions.hg38.interval_list
+#   IDT: resources/xgen-exome-hyb-panel-v2-targets-hg38.interval_list 
+regions: resources/xgen-exome-hyb-panel-v2-targets-hg38.interval_list
+
+# Scatter HaplotypeCaller
+scatter_count: 50
+#
+# Should intervals be split (use true for wgs)
+scatter_split_intervals: false
 
 # Use 'vqsr' with >= 30 exomes or >= 3 WGS samples
 # Otherwise use 'hard' for gatk recomended cuttoffs
 filtering: hard
 
+# Should haplotype caller output bam files (this reduces performance)
+haplotype_bamfiles: false
+
 # VEP cache version
 ensembl_version: 108
+
+# Location of fastq config
+fastqs: config/fastqs.tsv
 
 # Output folder
 datadir: processed
 
+# GATK bundle location
 # Location of local GATK resource bundle reference sources
 reference_path: /data/seqcore/reference/gatk-bundle/hg38
 
@@ -32,6 +47,7 @@ hard_filter:
       -filter FS > 200.0 --filter-name FS200"
       -filter ReadPosRankSum < -20.0 --filter-name ReadPosRankSum-20"
 
+
 # GATK recommended VQSR settings
 # VQSR will be done in allele specific mode
 vqsr:
@@ -49,7 +65,8 @@ vqsr:
     tranches: 
       [100.0 99.95 99.9 99.5, 99.0, 97.0, 96.0, 95.0, 94.0, 93.5, 93.0, 92.0, 91.0, 90.0]
 
-reference:
+
+references:
   ref_fasta: Homo_sapiens_assembly38.fasta
   ref_dict:  Homo_sapiens_assembly38.dict
   ref_fai:   Homo_sapiens_assembly38.fasta.fai
@@ -78,8 +95,8 @@ reference:
   omni_vcf: 1000G_omni2.5.hg38.vcf.gz
   omni_idx: 1000G_omni2.5.hg38.vcf.gz.tbi
 
-  1kg_vcf: 1000G_phase1.snps.high_confidence.hg38.vcf.gz
-  1kg_idx: 1000G_phase1.snps.high_confidence.hg38.vcf.gz.tbi
+  onekg_vcf: 1000G_phase1.snps.high_confidence.hg38.vcf.gz
+  onekg_idx: 1000G_phase1.snps.high_confidence.hg38.vcf.gz.tbi
 
 #contamination:
 #    ud:  contamination-resources/1000g/1000g.phase3.100k.b38.vcf.gz.dat.UD
