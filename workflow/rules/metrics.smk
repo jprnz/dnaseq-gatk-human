@@ -74,6 +74,7 @@ rule samstats:
     shell:
         "(samtools stats {input.bam} > {output}) &> {log}"
 
+localrules: run_metrics
 rule run_metrics:
     input:
         expand(metricsdir + "/wgs_metrics/{sample}.metrics", sample=samples),

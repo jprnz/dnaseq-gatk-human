@@ -25,6 +25,7 @@ rule fastp:
         "  --thread {threads} "
         "  --detect_adapter_for_pe) &> {log}"
 
+localrules: run_fastp
 rule run_fastp:
     input:
         expand(fastpdir + "/json_reports/{sample}.json", sample=samples)

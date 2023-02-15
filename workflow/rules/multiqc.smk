@@ -22,5 +22,6 @@ rule multiqc:
         "  {params.input_path} "
         ") &> {log}"
 
+localrules: run_multiqc
 rule run_multiqc:
     input: rules.multiqc.output

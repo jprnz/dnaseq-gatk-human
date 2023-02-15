@@ -28,6 +28,7 @@ rule bwa:
         "  && samtools index -b {output.bam} "
         ") &> {log}"
 
+localrules: run_bwa
 rule run_bwa:
     input:
         expand(bwadir + "/{sample}.bam", sample=samples)
