@@ -5,7 +5,7 @@ vqsr_targets = expand(filterdir + "/vqsr/{var}.vcf.gz", var=var_types)
 hard_targets = expand(filterdir + "/hard/{var}.vcf.gz", var=var_types)
 
 if filtering == "vqsr":
-    var_targest = vqsr_targets
+    var_targets = vqsr_targets
 else:
     var_targets = hard_targets
 
