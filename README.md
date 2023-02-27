@@ -1,4 +1,4 @@
-# GATK - Preprocessing
+# GATK - Best Practices
 
 This workflow is designed to perform the preprocessing steps for GATK
 
@@ -21,8 +21,8 @@ Change your default branch to `analysis` in GitLab via setting -> repository -> 
 ### Conda
 Install conda to `conda/` directory
 ```
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p conda
+wget wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh -b -p conda
 ```
 
 Activate the base environment
@@ -32,7 +32,7 @@ source conda/bin/activate base
 
 Install mamba package manager
 ```
-conda install mamba -c conda-forge -y
+conda install mamba conda -y
 ```
 
 Install Snakemake and activate environment
