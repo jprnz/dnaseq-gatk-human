@@ -9,5 +9,6 @@ export TMPDIR=$tmpdir
 snakemake \
   --latency-wait 240 \
   --conda-frontend mamba \
+  --rerun-triggers mtime \
   --profile $path/cluster/slurm \
   "$@"

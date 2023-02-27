@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - snakemake =7.22.0
+  - snakemake =7.23.1
   - conda-pack
   - cookiecutter
   - ipdb

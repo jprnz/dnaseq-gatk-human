@@ -77,7 +77,6 @@ rule haplotype_caller:
         "../envs/gatk.yaml"
     resources:
         mem_mb = 12000
-    group: "haplotype"
     shell:
         "(set -x; "
         " gatk --java-options \"-Xms8G -Xmx10G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
@@ -96,38 +95,7 @@ rule haplotype_caller:
         "   --output {output.vcf}"
         " && touch {output.bam} {output.bai}) &> {log}"
 
-
-rule annotate_gvcf:
-    input:
-        vcf = haplotypedir + "/scatter/{sample}/{scatter}.rb.g.vcf.gz",
-        bam = bqsrdir + "/{sample}.bam",
-        bai = bqsrdir + "/{sample}.bai",
-        interval = haplotypedir + "/intervals/{scatter}-scattered.interval_list",
-        ref_fasta = ref_fasta,
-    output:
-        vcf = haplotypedir + "/scatter/{sample}/{scatter}.ann.rb.g.vcf.gz",
-    log:
-        haplotypedir + "/logs/{sample}/{scatter}-annotate.log"
-    conda:
-        "../envs/gatk.yaml"
-    resources:
-        mem_mb = 12000
-    group: "haplotype"
-    shell:
-        "(set -x; "
-        " gatk --java-options \"-Xms8G -Xmx10G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
-        "   VariantAnnotator"
-        "   --input {input.bam}"
-        "   --variant {input.vcf}"
-        "   --reference {input.ref_fasta}"
-        "   --intervals {input.interval}"
-        "   -G StandardAnnotation"
-        "   -G StandardHCAnnotation"
-        "   -G AS_StandardAnnotation"
-        "   --tmp-dir {resources.tmpdir}"
-        "   --output {output.vcf}"
-        ") &> {log}"
-
+# Not currently used
 rule reblock_gvcf:
     input:
         vcf = haplotypedir + "/scatter/{sample}/{scatter}.g.vcf.gz",
@@ -141,7 +109,6 @@ rule reblock_gvcf:
         "../envs/gatk.yaml"
     resources:
         mem_mb = 8000
-    group: "haplotype"
     shell:
         "(set -x; "
         " gatk --java-options \"-Xms8G -Xmx10G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
@@ -285,6 +252,6 @@ if haplotype_bamfiles:
 localrules: remove_scatter, run_haplotype
 rule run_haplotype:
     input: 
-        #expand(haplotypedir + "/logs/{sample}-remove-scatter.log", sample=samples),
+        expand(haplotypedir + "/logs/{sample}-remove-scatter.log", sample=samples),
         haplotypedir + "/genotypes.vcf.gz"
 
