@@ -75,9 +75,9 @@ markdupdir   = f"{datadir}/d03_markdups"
 bqsrdir      = f"{datadir}/d04_bqsr"
 haplotypedir = f"{datadir}/d05_haplotype"
 filterdir    = f"{datadir}/d06_filter"
-metricsdir   = f"{datadir}/d06_metrics"
-vepdir       = f"{datadir}/d07_vep"
-multiqcdir   = f"{datadir}/d08_multiqc"
+metricsdir   = f"{datadir}/d07_metrics"
+vepdir       = f"{datadir}/d08_vep"
+multiqcdir   = f"{datadir}/d09_multiqc"
 
 # Set constraints for wildcards
 wildcard_constraints:
@@ -92,8 +92,8 @@ include: "rules/bwa.smk"
 include: "rules/markdups.smk"
 include: "rules/bqsr.smk"
 include: "rules/haplotype.smk"
-include: "rules/filter.smk"
 include: "rules/vqsr.smk"
+include: "rules/filter.smk"
 include: "rules/metrics.smk"
 include: "rules/vep.smk"
 include: "rules/multiqc.smk"
@@ -105,5 +105,4 @@ rule all:
         rules.run_metrics.input,
         rules.run_multiqc.input,
         rules.run_vep.input
-
 
