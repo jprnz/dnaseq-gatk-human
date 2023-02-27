@@ -14,9 +14,12 @@ extra_fn_clean_exts:
   - _R1
   - _R2
   - .readdistribution
+  - _samstats
 
 # Overrides of expected search path
 sp:
   fastp:
     fn: '*.json'
+
+# Don't include fastp duplication rate
 

@@ -17,7 +17,7 @@ filtering: hard
 haplotype_bamfiles: false
 
 # VEP cache version
-ensembl_version: 108
+vep_version: 108
 
 # Location of fastq config
 fastqs: config/fastqs.tsv
@@ -29,23 +29,25 @@ datadir: processed
 # Location of local GATK resource bundle reference sources
 reference_path: /data/seqcore/reference/gatk-bundle/hg38
 
+# Location of VEP cache
+vep_cache_path: /data/seqcore/reference/vep-cache
+
 # GATK recomended hard-filter criteria
 hard_filter:
-    snp: >
-      -filter QD < 2.0 --filter-name QD2"
-      -filter QUAL < 30.0 --filter-name QUAL30"
-      -filter SOR > 3.0 --filter-name SOR3"
-      -filter FS > 60.0 --filter-name FS60"
-      -filter MQ < 40.0 --filter-name MQ40"
-      -filter MQRankSum < -12.5 --filter-name MQRankSum-12.5"
-      -filter ReadPosRankSum < -8.0 --filter-name ReadPosRankSum-8"
+    snp: >-
+      QD < 2.0 
+      || QUAL < 30.0 
+      || SOR > 3.0
+      || FS > 60.0
+      || MQ < 40.0
+      || MQRankSum < -12.5
+      || ReadPosRankSum < -8.0
 
-
-    indel: >
-      -filter QD < 2.0 --filter-name QD2"
-      -filter QUAL < 30.0 --filter-name QUAL30"
-      -filter FS > 200.0 --filter-name FS200"
-      -filter ReadPosRankSum < -20.0 --filter-name ReadPosRankSum-20"
+    indel: >-
+      QD < 2.0
+      || QUAL < 30.0
+      || FS > 200.0
+      || ReadPosRankSum < -20.0
 
 
 # GATK recommended VQSR settings
@@ -54,16 +56,16 @@ vqsr:
   snp:
     filter_level: 99.7
     annotations: 
-      [QD MQRankSum ReadPosRankSum FS, MQ, SOR, DP]
+      [AS_QD, AS_MQRankSum, AS_ReadPosRankSum, AS_FS, AS_MQ, AS_SOR]
     tranches: 
-      [100.0 99.95 99.9 99.8, 99.6, 99.5, 99.4, 99.3, 99.0, 98.0, 97.0, 90.0]
+      [100.0, 99.95, 99.9, 99.8, 99.6, 99.5, 99.4, 99.3, 99.0, 98.0, 97.0, 90.0]
 
   indel:
-    filter_level: 99.7
+    filter_level: 95.0
     annotations: 
-      [FS ReadPosRankSum MQRankSum QD, SOR, DP]
+      [AS_FS, AS_ReadPosRankSum, AS_MQRankSum, AS_QD, AS_SOR]
     tranches: 
-      [100.0 99.95 99.9 99.5, 99.0, 97.0, 96.0, 95.0, 94.0, 93.5, 93.0, 92.0, 91.0, 90.0]
+      [100.0, 99.95, 99.9, 99.5, 99.0, 97.0, 96.0, 95.0, 94.0, 93.5, 93.0, 92.0, 91.0, 90.0]
 
 
 references:

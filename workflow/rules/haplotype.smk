@@ -70,13 +70,14 @@ rule haplotype_caller:
         bam = haplotypedir + "/scatter/{sample}/{scatter}.bam",
         bai = haplotypedir + "/scatter/{sample}/{scatter}.bai"
     log:
-        haplotypedir + "/logs/scatter/{sample}/{scatter}.log"
+        haplotypedir + "/logs/{sample}/{scatter}.log"
     params:
         bam_output = haplotype_bam if haplotype_bam else ""
     conda:
         "../envs/gatk.yaml"
     resources:
         mem_mb = 12000
+    group: "haplotype"
     shell:
         "(set -x; "
         " gatk --java-options \"-Xms8G -Xmx10G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
@@ -86,18 +87,80 @@ rule haplotype_caller:
         "   --intervals {input.interval}"
         "   --dbsnp {input.dbsnp}"
         "   -G StandardAnnotation"
+        "   -G StandardHCAnnotation"
         "   -G AS_StandardAnnotation"
+        "   -GQB 10 -GQB 20 -GQB 30 -GQB 40 -GQB 50 -GQB 60 -GQB 70 -GQB 80 -GQB 90"
         "   -ERC GVCF"
         "   {params.bam_output}"
         "   --tmp-dir {resources.tmpdir}"
         "   --output {output.vcf}"
         " && touch {output.bam} {output.bai}) &> {log}"
 
+
+rule annotate_gvcf:
+    input:
+        vcf = haplotypedir + "/scatter/{sample}/{scatter}.rb.g.vcf.gz",
+        bam = bqsrdir + "/{sample}.bam",
+        bai = bqsrdir + "/{sample}.bai",
+        interval = haplotypedir + "/intervals/{scatter}-scattered.interval_list",
+        ref_fasta = ref_fasta,
+    output:
+        vcf = haplotypedir + "/scatter/{sample}/{scatter}.ann.rb.g.vcf.gz",
+    log:
+        haplotypedir + "/logs/{sample}/{scatter}-annotate.log"
+    conda:
+        "../envs/gatk.yaml"
+    resources:
+        mem_mb = 12000
+    group: "haplotype"
+    shell:
+        "(set -x; "
+        " gatk --java-options \"-Xms8G -Xmx10G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
+        "   VariantAnnotator"
+        "   --input {input.bam}"
+        "   --variant {input.vcf}"
+        "   --reference {input.ref_fasta}"
+        "   --intervals {input.interval}"
+        "   -G StandardAnnotation"
+        "   -G StandardHCAnnotation"
+        "   -G AS_StandardAnnotation"
+        "   --tmp-dir {resources.tmpdir}"
+        "   --output {output.vcf}"
+        ") &> {log}"
+
+rule reblock_gvcf:
+    input:
+        vcf = haplotypedir + "/scatter/{sample}/{scatter}.g.vcf.gz",
+        interval = haplotypedir + "/intervals/{scatter}-scattered.interval_list",
+        ref_fasta = ref_fasta,
+    output:
+        vcf = haplotypedir + "/scatter/{sample}/{scatter}.rb.g.vcf.gz",
+    log:
+        haplotypedir + "/logs/{sample}/{scatter}-reblock.log"
+    conda:
+        "../envs/gatk.yaml"
+    resources:
+        mem_mb = 8000
+    group: "haplotype"
+    shell:
+        "(set -x; "
+        " gatk --java-options \"-Xms8G -Xmx10G -XX:ParallelGCThreads=5 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10\""
+        "   ReblockGVCF"
+        "   --variant {input.vcf}"
+        "   --do-qual-approx"
+        "   --tree-score-threshold-to-no-call 0.2"
+        "   --floor-blocks -GQB 20 -GQB 30 -GQB 40"
+        "   --reference {input.ref_fasta}"
+        "   --tmp-dir {resources.tmpdir}"
+        "   --output {output.vcf}"
+        ") &> {log}"
+
 rule gather_haplotypes:
     input:
         haplotype_gvcfs
     output:
         vcf = haplotypedir + "/gvcf_files/{sample}.g.vcf.gz",
+        tbi = haplotypedir + "/gvcf_files/{sample}.g.vcf.gz.tbi"
     log:
         haplotypedir + "/logs/{sample}-merge-vcfs.log"
     conda:
@@ -113,14 +176,15 @@ rule gather_haplotypes:
         "   {params.vcfs}"
         "   --VALIDATION_STRINGENCY SILENT"
         "   --TMP_DIR {resources.tmpdir}"
-        "   --OUTPUT {output}"
+        "   --OUTPUT {output.vcf}"
         ") &> {log}"
 
 rule gather_bamfiles:
     input:
         haplotype_bams
     output:
-        bam = haplotypedir + "/bam_files/{sample}.bam"
+        bam = haplotypedir + "/bam_files/{sample}.bam",
+        bai = haplotypedir + "/bam_files/{sample}.bai"
     log:
         haplotypedir + "/logs/{sample}-merge-bams.log"
     conda:
@@ -167,7 +231,7 @@ rule combine_gvcfs:
         mem_mb = 25000
     threads: 5
     shell:
-        "(set -x; "
+        "(set -x;"
         " gatk --java-options \"-Xms8000m -Xmx25000m -XX:ParallelGCThreads=5\""
         " GenomicsDBImport"
         "   {params.vcfs}"
@@ -175,6 +239,7 @@ rule combine_gvcfs:
         "   --intervals {input.intervals}"
         "   --merge-input-intervals"
         "   --reader-threads 5"
+        "   -LE"
         "   --tmp-dir {resources.tmpdir}"
         ") &> {log}"
 
@@ -194,7 +259,7 @@ rule genotype_gvcfs:
         mem_mb = 25000
     threads: 1
     shell:
-        "(set -x; "
+        "(set -x;"
         " gatk --java-options \"-Xms8000m -Xmx25000m -XX:ParallelGCThreads=5\""
         " GenotypeGVCFs"
         "   -V gendb://{input.gendb}"
@@ -202,7 +267,9 @@ rule genotype_gvcfs:
         "   --intervals {input.intervals}"
         "   --dbsnp {input.dbsnp}"
         "   -G StandardAnnotation"
+        "   -G StandardHCAnnotation"
         "   -G AS_StandardAnnotation"
+        "   --keep-combined-raw-annotations"
         "   --merge-input-intervals"
         "   --tmp-dir {resources.tmpdir}"
         "   --output {output}"
@@ -218,6 +285,6 @@ if haplotype_bamfiles:
 localrules: remove_scatter, run_haplotype
 rule run_haplotype:
     input: 
-        expand(haplotypedir + "/logs/{sample}-remove-scatter.log", sample=samples),
+        #expand(haplotypedir + "/logs/{sample}-remove-scatter.log", sample=samples),
         haplotypedir + "/genotypes.vcf.gz"
 

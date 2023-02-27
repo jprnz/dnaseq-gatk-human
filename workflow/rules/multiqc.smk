@@ -1,8 +1,6 @@
 rule multiqc:
     input:
-        rules.run_fastp.input,
-        rules.run_bqsr.input,
-        rules.run_metrics.input,
+        rules.run_metrics.input
     output:
         multiqcdir + "/QC.html"
     log:

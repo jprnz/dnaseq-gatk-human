@@ -26,6 +26,16 @@ reference_path = config['reference_path']
 # Capture regions
 regions = config['regions']
 
+# Filter options
+filtering = config['filtering']
+hard = config['hard_filter']
+vqsr = config['vqsr']
+
+# VEP options
+vep_cache_path = config['vep_cache_path']
+vep_version = config['vep_version']
+
+
 # Scatter options
 scatter_count = config['scatter_count']
 scatter_split_intervals = config['scatter_split_intervals']
@@ -58,19 +68,22 @@ if not all([len(v) == 2 for v in sample_pairs]):
     raise ValueError("Workflow only supports paired-end samples")
 
 # Output paths
-fastqdir   = f"{datadir}/d00_fastq"
-fastpdir   = f"{datadir}/d01_fastp"
-bwadir     = f"{datadir}/d02_bwa"
-markdupdir = f"{datadir}/d03_markdups"
-bqsrdir    = f"{datadir}/d04_bqsr"
+fastqdir     = f"{datadir}/d00_fastq"
+fastpdir     = f"{datadir}/d01_fastp"
+bwadir       = f"{datadir}/d02_bwa"
+markdupdir   = f"{datadir}/d03_markdups"
+bqsrdir      = f"{datadir}/d04_bqsr"
 haplotypedir = f"{datadir}/d05_haplotype"
-metricsdir = f"{datadir}/d06_metrics"
-multiqcdir = f"{datadir}/d07_multiqc"
+filterdir    = f"{datadir}/d06_filter"
+metricsdir   = f"{datadir}/d06_metrics"
+vepdir       = f"{datadir}/d07_vep"
+multiqcdir   = f"{datadir}/d08_multiqc"
 
 # Set constraints for wildcards
 wildcard_constraints:
     sample  = "|".join(samples),
     pair    = "|".join(pairs),
+    var     = "snp|indel"
 
 # Rules
 include: "rules/fastq.smk"
@@ -79,15 +92,18 @@ include: "rules/bwa.smk"
 include: "rules/markdups.smk"
 include: "rules/bqsr.smk"
 include: "rules/haplotype.smk"
+include: "rules/filter.smk"
+include: "rules/vqsr.smk"
 include: "rules/metrics.smk"
+include: "rules/vep.smk"
 include: "rules/multiqc.smk"
 
 
 # Main target
 rule all:
     input:
-        rules.run_bqsr.input,
         rules.run_metrics.input,
-        rules.run_multiqc.input
+        rules.run_multiqc.input,
+        rules.run_vep.input
 
 
