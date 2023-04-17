@@ -50,7 +50,7 @@ rule wgs_metrics:
         "--INTERVALS {input.intervals} "
         "--MINIMUM_MAPPING_QUALITY 1 "
         "--MINIMUM_BASE_QUALITY 1 "
-        "--USE_FAST_ALGORITHM true "
+        "--USE_FAST_ALGORITHM false "
         "--VALIDATION_STRINGENCY SILENT) &> {log}"
 
 rule variant_metrics:

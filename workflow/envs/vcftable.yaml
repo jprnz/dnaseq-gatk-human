@@ -1,0 +1,17 @@
+name: vcftable
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - cyvcf2 =0.30.16
+  - python = 3.9
+  - dill
+  - joblib
+  - htslib
+  - pandas
+  - pyyaml
+  - xlsxwriter
+  - rich
+  - click
+  - ipython
+  - ipdb

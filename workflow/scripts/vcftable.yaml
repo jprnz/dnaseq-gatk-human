@@ -1,0 +1,173 @@
+columns:
+  # Variant type
+  - chrom:
+      title: "Chromosome"
+      desc: "Chromosome"
+  - pos:
+      title: "Position"
+      desc: "Position of variant start"
+  - ref:
+      title: "Reference Allele"
+      desc: "Reference allele"
+  - alt:
+      title: "Variant Allele"
+      desc: "Variant allele"
+  - VARIANT_CLASS:
+      title: "Variant Class"
+      desc: "Class of variant (SNV, deletion, insertion, etc. See, https://grch37.ensembl.org/info/genome/variation/prediction/classification.html#classes)"
+  - sample:
+      title: "Sample"
+      desc: "Sample having this this genotype"
+  - zyg:
+      title: "Zygosity"
+      desc: "Zygosity of called genotype (hom_ref, hom_alt, or het)"
+  - gt:
+      title: "Genotype"
+      desc: "Configuration of alleles and zygosity found at this site (for example, 0/0 homozygous reference, 0/1 or 1/2 heterozygous alternative; etc)"
+  - ALLELE_NUM:
+      title: "Allele Number"
+      desc: "Allele number in genotype (0 is reference, 1 is first allele, etc)"
+
+  # Per sample
+  - ap:
+      title: "Variant depth percent"
+      desc: "Percent of reads in support of variant allele"
+  - rp:
+      title: "Reference depth percent"
+      desc: "Percent of reads in support of reference allele"
+  - ad:
+      title: "Variant depth count"
+      desc: "Count of reads in support of variant allele"
+  - rd:
+      title: "Reference depth count"
+      desc: "Count of reads in support of reference allele"
+  - dp:
+      title: "Total read count"
+      desc: "Total number of reads seen at this site in support of for any allele"
+
+  # CSQ fields
+  - dbsnp_id:
+      title: "dbSNP"
+      desc: "dbsnp_identifier of variant (https://www.ncbi.nlm.nih.gov/snp)"
+  - cosmic_id:
+      title: "COSMIC"
+      desc: "COSMIC identifier of variant (https://cancer.sanger.ac.uk/cosmic)"
+
+  # Feature
+  - Consequence:
+      title: "Consequence"
+      desc: "The effect of the variant has on this genomic feature (See: https://grch37.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences)"
+  - IMPACT:
+      title: "Impact"
+      desc: "Subjective classification of the severity of the variant consequence"
+  - SYMBOL:
+      title: "Gene"
+      desc: "Gene symbol of affected gene"
+  - Gene:
+      title: "Gene ID"
+      desc: "Ensembl identifier of affected gene"
+  - Feature:
+      title: "Feature ID"
+      desc: "Ensembl identifier of affected transcript, regulatory feature, or motif"
+  - BIOTYPE:
+      title: "Biotype"
+      desc: "Biotype of the affected transcript or regulatory feature"
+  - EXON:
+      title: "Exon"
+      desc: "Affected exon (out of total number)"
+  - INTRON:
+      title: "Intron"
+      desc: "Affected intron (out of total number)"
+  - cDNA_position:
+      title: "cDNA Position"
+      desc: "Relative position in cDNA where variant occurs"
+  - CDS_position:
+      title: "CDS Position"
+      desc: "Relative position in CDS where variant occurs"
+  - Protein_position:
+      title: "Protein Position"
+      desc: "Relative position in protein sequence where variant occurs"
+  - Amino_acids:
+      title: "Amino Acid Change"
+      desc: "Amino acids change of the protein-coding sequence"
+  - Codons:
+      title: "Codons Change"
+      desc: "Alternative codons with the variant bases in upper case"
+  - HGVSc:
+      title: "HGVSc"
+      desc: "The HGVS identifier of the coding sequence variant (See: http://varnomen.hgvs.org/)"
+  - HGVSp:
+      title: "HGVSp"
+      desc: "The HGVS identifier of the protein-coding sequence variant "
+  - HGVS_OFFSET:
+      title: "HGVS Offset"
+      desc: "Amount HGVS IDs have been shifted 3-prime relative to the transcript or protein sequence in accordance with HGVS specifications"
+
+  # Population
+  - gnomADe_AF:
+      title: "gnomAD AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes combined population"
+  - gnomADe_AFR_AF:
+      title: "gnomAD AFR AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes African/American population"
+  - gnomADe_AMR_AF:
+      title: "gnomAD AMR AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes American population"
+  - gnomADe_ASJ_AF:
+      title: "gnomAD ASJ AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes Ashkenazi Jewish population"
+  - gnomADe_EAS_AF:
+      title: "gnomAD EAS AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes East Asian population"
+  - gnomADe_FIN_AF:
+      title: "gnomAD FIN AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes Finnish population"
+  - gnomADe_NFE_AF:
+      title: "gnomAD NFE AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes Non-Finnish European population"
+  - gnomADe_OTH_AF:
+      title: "gnomAD OTH AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes combined other combined populations"
+  - gnomADe_SAS_AF:
+      title: "gnomAD SAS AF Exome"
+      desc: "Frequency of existing variant in gnomAD exomes South Asian population"
+
+  - gnomADg_AF:
+      title: "gnomAD AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes combined population"
+  - gnomADg_AFR_AF:
+      title: "gnomAD AFR AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes African/American population"
+  - gnomADg_AMR_AF:
+      title: "gnomAD AMR AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes American population"
+  - gnomADg_ASJ_AF:
+      title: "gnomAD ASJ AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes Ashkenazi Jewish population"
+  - gnomADg_EAS_AF:
+      title: "gnomAD EAS AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes East Asian population"
+  - gnomADg_FIN_AF:
+      title: "gnomAD FIN AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes Finnish population"
+  - gnomADg_NFE_AF:
+      title: "gnomAD NFE AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes Non-Finnish European population"
+  - gnomADg_OTH_AF:
+      title: "gnomAD OTH AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes combined other combined populations"
+  - gnomADg_SAS_AF:
+      title: "gnomAD SAS AF Genome"
+      desc: "Frequency of existing variant in gnomAD genomes South Asian population"
+
+  # Predictions
+  - SIFT:
+      title: "SIFT"
+      desc: "SIFT prediction and/or score, with both given as prediction(score) (See: http://provean.jcvi.org/index.php)"
+  - PolyPhen:
+      title: "PolyPhen"
+      desc: "The PolyPhen prediction and/or score (See: http://genetics.bwh.harvard.edu/pph2)"
+  - PUBMED:
+      title: "PubMed"
+      desc: "List of PubMed IDs that mention this variant"
+

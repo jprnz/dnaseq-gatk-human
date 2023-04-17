@@ -32,6 +32,8 @@ rule vep:
     cache = vep_cache_path
   conda:
     "../envs/vep.yaml"
+  resources:
+    mem_mb = 16000
   threads: 10
   shell:
     "(set -x; vep "
@@ -46,7 +48,7 @@ rule vep:
     "  --pick_allele"
     "  --force"
     "  --vcf"
-    "  --buffer_size 10000"
+    "  --buffer_size 50000"
     "  --compress_output gzip"
     "  --output_file {output.vcf}"
     "  --stats_file {output.htm}"

@@ -10,6 +10,8 @@
 !workflow/envs/*
 !workflow/rules/*
 !workflow/scripts/*
+!workflow/scripts/vcftable/
+!workflow/scripts/vcftable/*
 !resources
 !resources/*
 !resources/wgs_calling_scatter_intervals/*

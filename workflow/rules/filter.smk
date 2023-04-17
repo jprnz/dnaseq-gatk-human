@@ -85,8 +85,5 @@ localrules: run_hard_filter
 rule run_hard_filter:
     input: hard_targets
 
-localrules: run_filter
-rule run_filter:
-    input: filterdir + "/genotypes-filtered.vcf.gz"
 
 

@@ -98,18 +98,22 @@ rule vqsr_indel_recal:
 rule vqsr_apply:
     input:
         vcf = haplotypedir + "/genotypes.vcf.gz",
-        tranches = filterdir + "/vqsr/{var}.tranches",
-        recal = filterdir + "/vqsr/{var}.recal"
+        snp_tranches = filterdir + "/vqsr/snp.tranches",
+        snp_recal = filterdir + "/vqsr/snp.recal",
+        indel_tranches = filterdir + "/vqsr/indel.tranches",
+        indel_recal = filterdir + "/vqsr/indel.recal"
     output:
-        vcf = filterdir + "/vqsr/{var}.vcf.gz",
-        idx = filterdir + "/vqsr/{var}.vcf.gz.tbi",
+        vcf = filterdir + "/genotypes-filtered.vcf.gz",
+        idx = filterdir + "/genotypes-filtered.vcf.gz.tbi",
+        tmp = temp(filterdir + "/vqsr/snp.tmp.vcf.gz"),
+        tmp_idx = temp(filterdir + "/vqsr/snp.tmp.vcf.gz.tbi"),
     log:
-        filterdir + "/logs/vqsr-{var}-apply.log"
+        filterdir + "/logs/vqsr-apply.log"
     conda:
         "../envs/gatk.yaml"
     params:
-        level = vqsr['snp']['filter_level'],
-        mode = lambda wc: "SNP" if wc.var == "snp" else "INDEL"
+        snp_level = vqsr['snp']['filter_level'],
+        indel_level = vqsr['indel']['filter_level'],
     resources:
         mem_mb = 8000
     shell:
@@ -117,18 +121,28 @@ rule vqsr_apply:
         " gatk --java-options \"-Xms3G -Xmx8G -XX:ParallelGCThreads=5\""
         " ApplyVQSR"
         "   -V {input.vcf}"
-        "   -mode {params.mode}"
-        "   --recal-file {input.recal}"
-        "   --truth-sensitivity-filter-level {params.level}"
+        "   -mode SNP"
+        "   --recal-file {input.snp_recal}"
+        "   --tranches-file {input.snp_tranches}"
+        "   --truth-sensitivity-filter-level {params.snp_level}"
         "   --use-allele-specific-annotations"
-        "   --tranches-file {input.tranches}"
+        "   --tmp-dir {resources.tmpdir}"
+        "   --output {output.tmp} &&"
+        " gatk --java-options \"-Xms3G -Xmx8G -XX:ParallelGCThreads=5\""
+        " ApplyVQSR"
+        "   -V {output.tmp}"
+        "   -mode INDEL"
+        "   --recal-file {input.indel_recal}"
+        "   --tranches-file {input.indel_tranches}"
+        "   --truth-sensitivity-filter-level {params.indel_level}"
+        "   --use-allele-specific-annotations"
         "   --tmp-dir {resources.tmpdir}"
         "   --output {output.vcf}"
         ") &> {log}"
 
-localrules: run_vqsr_filter
-rule run_vqsr_filter:
-    input: vqsr_targets
+localrules: run_vqsr
+rule run_vqsr:
+    input: rules.vqsr_apply.output
 
 
 
