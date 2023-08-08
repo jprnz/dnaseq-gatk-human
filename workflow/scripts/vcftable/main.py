@@ -14,7 +14,7 @@ from .parser import parse_records
 from .writer import write_csv, write_excel_filtered
 
 try:
-    TMPFILE = "test.pkl" #tempfile.NamedTemporaryFile()
+    TMPFILE = tempfile.NamedTemporaryFile()
 except:
     log.exception("Could not create temporary file")
     sys.exit(1)

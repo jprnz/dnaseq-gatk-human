@@ -23,7 +23,6 @@ rule markdups:
         "  VALIDATION_STRINGENCY=SILENT "
         ") &> {log}"
 
-localrules: run_markdups
 rule run_markdups:
     input:
         expand(markdupdir + "/{sample}.bam", sample=samples)

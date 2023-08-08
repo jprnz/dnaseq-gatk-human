@@ -5,7 +5,7 @@ regions: resources/xgen-exome-hyb-panel-v2-targets-hg38.interval_list
 
 # Scatter HaplotypeCaller
 scatter_count: 50
-#
+
 # Should intervals be split (use true for wgs)
 scatter_split_intervals: false
 
@@ -99,11 +99,6 @@ references:
 
   onekg_vcf: 1000G_phase1.snps.high_confidence.hg38.vcf.gz
   onekg_idx: 1000G_phase1.snps.high_confidence.hg38.vcf.gz.tbi
-
-#contamination:
-#    ud:  contamination-resources/1000g/1000g.phase3.100k.b38.vcf.gz.dat.UD
-#    mu:  contamination-resources/1000g/1000g.phase3.100k.b38.vcf.gz.dat.mu
-#    bed: contamination-resources/1000g/1000g.phase3.100k.b38.vcf.gz.dat.bed
 
 
 ## Remote sources 

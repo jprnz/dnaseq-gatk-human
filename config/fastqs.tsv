@@ -1,5 +1,13 @@
 sample	pair	path
-WT-1	R1	/path/to/WT-1_R1.fastq.gz
-WT-1	R2	/path/to/WT-1_R2.fastq.gz
-Mu-1	R1	/path/to/Mu-1_R1.fastq.gz
-Mu-1	R2	/path/to/Mu-1_R2.fastq.gz
+Li-1	R1	data/Li_8503_230706A8/Li-1_S1_L001_R1_001.fastq.gz
+Li-1	R2	data/Li_8503_230706A8/Li-1_S1_L001_R2_001.fastq.gz
+Li-2	R1	data/Li_8503_230706A8/Li-2_S2_L001_R1_001.fastq.gz
+Li-2	R2	data/Li_8503_230706A8/Li-2_S2_L001_R2_001.fastq.gz
+Li-3	R1	data/Li_8503_230706A8/Li-3_S3_L001_R1_001.fastq.gz
+Li-3	R2	data/Li_8503_230706A8/Li-3_S3_L001_R2_001.fastq.gz
+Li-4	R1	data/Li_8503_230706A8/Li-4_S4_L001_R1_001.fastq.gz
+Li-4	R2	data/Li_8503_230706A8/Li-4_S4_L001_R2_001.fastq.gz
+Li-5	R1	data/Li_8503_230706A8/Li-5_S5_L001_R1_001.fastq.gz
+Li-5	R2	data/Li_8503_230706A8/Li-5_S5_L001_R2_001.fastq.gz
+Li-6	R1	data/Li_8503_230706A8/Li-6_S6_L001_R1_001.fastq.gz
+Li-6	R2	data/Li_8503_230706A8/Li-6_S6_L001_R2_001.fastq.gz

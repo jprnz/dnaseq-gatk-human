@@ -140,10 +140,6 @@ rule vqsr_apply:
         "   --output {output.vcf}"
         ") &> {log}"
 
-localrules: run_vqsr
 rule run_vqsr:
     input: rules.vqsr_apply.output
-
-
-
 

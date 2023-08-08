@@ -23,7 +23,6 @@ rule fastq_combine:
         shell("echo -e \"Running:\n" + cmd + "\" > {log}")
         shell("(set -x; " + cmd + ") &>> {log}")
 
-localrules: run_fastq_combine
 rule run_fastq_combine:
   input:
       expand(fastqdir + "/{sample}_{pair}.fastq.gz", sample=samples, pair=pairs)

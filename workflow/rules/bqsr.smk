@@ -61,7 +61,6 @@ rule bqsr_apply:
         "   --output {output.bam}"
         ") &> {log}"
 
-localrules: run_bqsr
 rule run_bqsr:
     input:
         expand(bqsrdir + "/{sample}.bam", sample=samples),

@@ -79,7 +79,6 @@ rule variant_metrics:
         "--THREAD_COUNT {threads} "
         "--VALIDATION_STRINGENCY SILENT) &> {log}"
 
-localrules: run_metrics
 rule run_metrics:
     input:
         expand(metricsdir + "/idxstats/{sample}_idxstats.tsv", sample=samples),

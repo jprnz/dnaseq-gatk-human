@@ -282,7 +282,6 @@ bam_targets = expand(haplotypedir + "/bam_files/{sample}.bam", sample=samples)
 if haplotype_bamfiles:
     hap_targets += bam_targets  
 
-localrules: remove_scatter, run_haplotype
 rule run_haplotype:
     input: 
         #expand(haplotypedir + "/logs/{sample}-remove-scatter.log", sample=samples),
